@@ -20,8 +20,10 @@ func checkErr(err error) {
 
 func main() {
 	stat, err := os.Stat(testRepo)
-	checkErr(err)
-	if stat.IsDir() {
+	if err != nil && !os.IsNotExist(err) {
+		panic(err)
+	}
+	if stat != nil && stat.IsDir() {
 		checkErr(os.RemoveAll(testRepo))
 	}
 
@@ -47,9 +49,6 @@ func main() {
 
 	checkErr(createOrAppendToRepoFile("testfile04.txt", "testFile04"))
 	checkErr(deleteRepoFile("testfile03.txt"))
-
-	//checkErr(addRepoFile(worktree, "testfile03.txt"))
-	//checkErr(addRepoFile(worktree, "testfile04.txt"))
 
 	// worktree is not clean!!!
 	// Changes not staged for commit:
